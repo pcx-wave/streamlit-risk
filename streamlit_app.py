@@ -1,7 +1,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import networkx as nx
-import numpy as np
+from io import BytesIO  # Import BytesIO for handling in-memory files
 
 # Define node descriptions and edge details
 node_descriptions = {
