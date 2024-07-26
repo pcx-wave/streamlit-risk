@@ -41,7 +41,7 @@ edge_descriptions = {
     ('Cryptocurrencies', 'Small-Cap Altcoins'): 'Cryptocurrencies include small-cap altcoins.'
 }
 
-# Define node positions
+# Define node positions explicitly for a clear hierarchy
 node_positions = {
     'Central Bank Policies\n(Interest Rates)': (0, 10),
     'Bond Yields\n(Yield Curve)': (0, 8),
