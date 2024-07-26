@@ -55,10 +55,10 @@ node_positions = {
     'High-Yield Bonds': (200, 300),
     'Commodities': (0, 400),
     'Cryptocurrencies': (200, 400),
-    'Bitcoin (BTC)': (400, 400),
-    'Ethereum (ETH)': (600, 400),
-    'Large-Cap Altcoins': (800, 500),
-    'Small-Cap Altcoins': (1000, 600)
+    'Bitcoin (BTC)': (200, 500),
+    'Ethereum (ETH)': (400, 500),
+    'Large-Cap Altcoins': (400, 600),
+    'Small-Cap Altcoins': (600, 600)
 }
 
 def draw_graph(node_weights):
