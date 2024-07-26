@@ -42,7 +42,7 @@ edge_descriptions = {
 }
 
 def draw_interactive_graph(node_weights):
-    net = Network(notebook=True, height="800px", width="100%", bgcolor="#fafafa", font_color="black")
+    net = Network(notebook=True, height="800px", width="100%", bgcolor="#fafafa", font_color="black", font_size=14, edge_width=2)
     
     # Add nodes with tooltips
     for node, description in node_descriptions.items():
@@ -52,10 +52,13 @@ def draw_interactive_graph(node_weights):
     
     # Add edges with tooltips
     for u, v in edge_descriptions.keys():
-        width = max(1 + 2 * abs(node_weights.get(u, 0)), 1)  # Minimum width of 1
+        width = max(2 + 4 * abs(node_weights.get(u, 0)), 2)  # Minimum width of 2
         net.add_edge(u, v, title=edge_descriptions[(u, v)], width=width)
     
-    return net
+    # Return the network as an HTML file
+    path = '/tmp/network.html'
+    net.save_graph(path)
+    return path
 
 st.title('Risk-On/Risk-Off Environment Simulator - Manual Mode')
 
@@ -86,9 +89,7 @@ for node in node_weights.keys():
 st.write("### Risk Environment Graph")
 
 try:
-    net = draw_interactive_graph(node_weights)
-    path = '/tmp/network.html'
-    net.save_graph(path)
+    path = draw_interactive_graph(node_weights)
     st.components.v1.html(open(path, 'r').read(), height=800)
 except Exception as e:
     st.error(f"An error occurred while generating the graph: {e}")
