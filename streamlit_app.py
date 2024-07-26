@@ -1,7 +1,7 @@
 import streamlit as st
+import networkx as nx
 from pyvis.network import Network
-import pandas as pd
-from io import BytesIO
+from io import StringIO
 
 # Define node descriptions and edge details
 node_descriptions = {
@@ -43,43 +43,49 @@ edge_descriptions = {
 
 # Define node positions
 node_positions = {
-    'Central Bank Policies\n(Interest Rates)': (0, 10),
-    'Bond Yields\n(Yield Curve)': (0, 8),
-    'Economic Growth\n(GDP)': (0, 6),
-    'Inflation Rates': (0, 4),
-    'Employment Data\n(Unemployment Rate, NFP)': (0, 2),
-    'Consumer Confidence': (0, 0),
-    'US Dollar Index\n(DXY)': (0, -2),
-    'Oil Prices\n(WTI, Brent)': (0, -4),
-    'Equities\n(Stocks)': (0, -6),
-    'High-Yield Bonds': (0, -8),
-    'Commodities': (0, -10),
-    'Cryptocurrencies': (0, -12),
-    'Bitcoin (BTC)': (0, -14),
-    'Ethereum (ETH)': (0, -16),
-    'Large-Cap Altcoins': (0, -18),
-    'Small-Cap Altcoins': (0, -20)
+    'Central Bank Policies\n(Interest Rates)': (0, 0),
+    'Bond Yields\n(Yield Curve)': (0, -100),
+    'Economic Growth\n(GDP)': (0, -200),
+    'Inflation Rates': (100, -100),
+    'Employment Data\n(Unemployment Rate, NFP)': (0, -300),
+    'Consumer Confidence': (100, -200),
+    'US Dollar Index\n(DXY)': (200, -100),
+    'Oil Prices\n(WTI, Brent)': (300, -100),
+    'Equities\n(Stocks)': (100, -300),
+    'High-Yield Bonds': (200, -200),
+    'Commodities': (300, -200),
+    'Cryptocurrencies': (400, -100),
+    'Bitcoin (BTC)': (400, -200),
+    'Ethereum (ETH)': (400, -300),
+    'Large-Cap Altcoins': (500, -200),
+    'Small-Cap Altcoins': (500, -300)
 }
 
-def draw_interactive_graph(node_weights):
-    net = Network(notebook=True, height="800px", width="100%", bgcolor="#fafafa", font_color="black")
+def draw_graph(node_weights):
+    G = nx.DiGraph()
 
-    # Add nodes with tooltips
+    # Add nodes with attributes
     for node, description in node_descriptions.items():
         size = max(20 + 50 * abs(node_weights.get(node, 0)), 20)  # Minimum size of 20
         color = 'green' if node_weights.get(node, 0) >= 0 else 'red'
-        pos = node_positions.get(node, (0, 0))  # Default to (0,0) if not specified
-        net.add_node(node, label=node, title=description, size=size, color=color, x=pos[0], y=pos[1])
+        G.add_node(node, size=size, color=color, title=description,
+                   x=node_positions[node][0], y=node_positions[node][1], fixed=True)
     
-    # Add edges with tooltips
+    # Add edges with attributes
     for u, v in edge_descriptions.keys():
         width = max(2 + 4 * abs(node_weights.get(u, 0)), 2)  # Minimum width of 2
-        net.add_edge(u, v, title=edge_descriptions[(u, v)], width=width)
-    
-    # Return the network as an HTML file
-    path = '/tmp/network.html'
-    net.save_graph(path)
-    return path
+        G.add_edge(u, v, width=width, title=edge_descriptions[(u, v)])
+
+    # Create a Pyvis Network
+    net = Network(notebook=True, height='600px', width='100%', bgcolor='#ffffff', font_color='black')
+    net.from_nx(G)
+
+    # Set the physics layout to False for fixed positions
+    net.repulsion(node_distance=420, central_gravity=0.33, spring_length=110, spring_strength=0.10, damping=0.95)
+    net.toggle_physics(False)
+
+    # Save and load the graph as HTML
+    return net.to_html()
 
 st.title('Risk-On/Risk-Off Environment Simulator - Manual Mode')
 
@@ -110,7 +116,7 @@ for node in node_weights.keys():
 st.write("### Risk Environment Graph")
 
 try:
-    path = draw_interactive_graph(node_weights)
-    st.components.v1.html(open(path, 'r').read(), height=800)
+    graph_html = draw_graph(node_weights)
+    st.components.v1.html(graph_html, height=800)
 except Exception as e:
     st.error(f"An error occurred while generating the graph: {e}")
