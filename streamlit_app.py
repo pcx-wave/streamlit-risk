@@ -1,76 +1,61 @@
 import streamlit as st
-import networkx as nx
-import matplotlib.pyplot as plt
+from pyvis.network import Network
+import pandas as pd
 from io import BytesIO
 
-# Function to create and display the graph
-def draw_graph(node_weights):
-    G = nx.DiGraph()
+# Define node descriptions and edge details
+node_descriptions = {
+    'Central Bank Policies\n(Interest Rates)': 'Interest rates set by the central bank.',
+    'Bond Yields\n(Yield Curve)': 'Interest rates on government bonds.',
+    'Economic Growth\n(GDP)': 'Rate of growth of a country\'s GDP.',
+    'Inflation Rates': 'Rate of increase in prices over time.',
+    'Employment Data\n(Unemployment Rate, NFP)': 'Unemployment rate and non-farm payroll data.',
+    'Consumer Confidence': 'Measures consumer sentiment and spending.',
+    'US Dollar Index\n(DXY)': 'Index of the US dollar against a basket of other currencies.',
+    'Oil Prices\n(WTI, Brent)': 'Prices of crude oil in the global market.',
+    'Equities\n(Stocks)': 'Stock prices and equity markets.',
+    'High-Yield Bonds': 'Bonds with higher returns but higher risk.',
+    'Commodities': 'Prices of raw materials and primary agricultural products.',
+    'Cryptocurrencies': 'Digital currencies using cryptographic techniques.',
+    'Bitcoin (BTC)': 'Leading cryptocurrency by market cap.',
+    'Ethereum (ETH)': 'Second largest cryptocurrency, known for its smart contract functionality.',
+    'Large-Cap Altcoins': 'Cryptocurrencies other than Bitcoin and Ethereum with large market caps.',
+    'Small-Cap Altcoins': 'Cryptocurrencies with smaller market caps.'
+}
+
+edge_descriptions = {
+    ('Central Bank Policies\n(Interest Rates)', 'Inflation Rates'): 'Interest rates impact inflation rates.',
+    ('Central Bank Policies\n(Interest Rates)', 'Bond Yields\n(Yield Curve)'): 'Central bank policies influence bond yields.',
+    ('Bond Yields\n(Yield Curve)', 'High-Yield Bonds'): 'Bond yields affect high-yield bonds returns.',
+    ('Economic Growth\n(GDP)', 'Consumer Confidence'): 'Economic growth influences consumer confidence.',
+    ('Economic Growth\n(GDP)', 'Equities\n(Stocks)'): 'Economic growth affects stock prices.',
+    ('Inflation Rates', 'High-Yield Bonds'): 'Inflation rates impact high-yield bonds.',
+    ('Employment Data\n(Unemployment Rate, NFP)', 'Equities\n(Stocks)'): 'Employment data influences stock market performance.',
+    ('US Dollar Index\n(DXY)', 'Oil Prices\n(WTI, Brent)'): 'Dollar index impacts oil prices.',
+    ('Oil Prices\n(WTI, Brent)', 'Commodities'): 'Oil prices affect commodity prices.',
+    ('Commodities', 'High-Yield Bonds'): 'Commodities influence high-yield bonds.',
+    ('Commodities', 'Cryptocurrencies'): 'Commodities prices affect cryptocurrencies.',
+    ('Cryptocurrencies', 'Bitcoin (BTC)'): 'Cryptocurrencies include Bitcoin.',
+    ('Cryptocurrencies', 'Ethereum (ETH)'): 'Cryptocurrencies include Ethereum.',
+    ('Cryptocurrencies', 'Large-Cap Altcoins'): 'Cryptocurrencies include large-cap altcoins.',
+    ('Cryptocurrencies', 'Small-Cap Altcoins'): 'Cryptocurrencies include small-cap altcoins.'
+}
+
+def draw_interactive_graph(node_weights):
+    net = Network(notebook=True, height="800px", width="100%", bgcolor="#fafafa", font_color="black")
     
-    # Define nodes and positions with a clearer hierarchical arrangement
-    nodes = {
-        'Central Bank Policies\n(Interest Rates)': (0, 5),
-        'Bond Yields\n(Yield Curve)': (-1, 4),
-        'Economic Growth\n(GDP)': (0, 4),
-        'Inflation Rates': (1, 4),
-        'Employment Data\n(Unemployment Rate, NFP)': (-1, 3),
-        'Consumer Confidence': (0, 3),
-        'US Dollar Index\n(DXY)': (1, 3),
-        'Oil Prices\n(WTI, Brent)': (-1, 2),
-        'Equities\n(Stocks)': (0, 2),
-        'High-Yield Bonds': (1, 2),
-        'Commodities': (-1, 1),
-        'Cryptocurrencies': (0, 1),
-        'Bitcoin (BTC)': (1, 1),
-        'Ethereum (ETH)': (2, 1),
-        'Large-Cap Altcoins': (1, 0),
-        'Small-Cap Altcoins': (2, 0)
-    }
+    # Add nodes with tooltips
+    for node, description in node_descriptions.items():
+        size = max(20 + 50 * abs(node_weights.get(node, 0)), 20)  # Minimum size of 20
+        color = 'green' if node_weights.get(node, 0) >= 0 else 'red'
+        net.add_node(node, label=node, title=description, size=size, color=color)
     
-    G.add_nodes_from(nodes.keys())
+    # Add edges with tooltips
+    for u, v in edge_descriptions.keys():
+        width = max(1 + 2 * abs(node_weights.get(u, 0)), 1)  # Minimum width of 1
+        net.add_edge(u, v, title=edge_descriptions[(u, v)], width=width)
     
-    # Define edges based on direct influence
-    edges = [
-        ('Central Bank Policies\n(Interest Rates)', 'Inflation Rates'),
-        ('Central Bank Policies\n(Interest Rates)', 'Bond Yields\n(Yield Curve)'),
-        ('Bond Yields\n(Yield Curve)', 'High-Yield Bonds'),
-        ('Economic Growth\n(GDP)', 'Consumer Confidence'),
-        ('Economic Growth\n(GDP)', 'Equities\n(Stocks)'),
-        ('Inflation Rates', 'High-Yield Bonds'),
-        ('Employment Data\n(Unemployment Rate, NFP)', 'Equities\n(Stocks)'),
-        ('US Dollar Index\n(DXY)', 'Oil Prices\n(WTI, Brent)'),
-        ('Oil Prices\n(WTI, Brent)', 'Commodities'),
-        ('Commodities', 'High-Yield Bonds'),
-        ('Commodities', 'Cryptocurrencies'),
-        ('Cryptocurrencies', 'Bitcoin (BTC)'),
-        ('Cryptocurrencies', 'Ethereum (ETH)'),
-        ('Cryptocurrencies', 'Large-Cap Altcoins'),
-        ('Cryptocurrencies', 'Small-Cap Altcoins')
-    ]
-    
-    G.add_edges_from(edges)
-    
-    # Retrieve node positions
-    pos = nodes
-    
-    # Determine node colors
-    node_colors = {node: 'red' if node_weights[node] < 0 else 'green' for node in G.nodes()}
-    
-    # Adjust node sizes based on the absolute value of weights
-    node_size = [max(500 + 1000 * abs(weight), 500) for weight in node_weights.values()]  # Minimum size of 500
-    
-    # Adjust edge widths based on the absolute value of weights
-    edge_width = [0.5 + 1.5 * abs(node_weights.get(u, 0)) for u, v in edges]  # Use node weights to determine edge width
-    
-    # Draw the graph
-    plt.figure(figsize=(12, 8))
-    nx.draw(G, pos, with_labels=True, node_size=node_size, node_color=[node_colors[node] for node in G.nodes()],
-            alpha=0.8, font_size=10, font_color="black", font_weight="bold", linewidths=2, width=edge_width, edge_color="grey")
-    
-    buffer = BytesIO()
-    plt.savefig(buffer, format='png')
-    buffer.seek(0)
-    return buffer
+    return net
 
 st.title('Risk-On/Risk-Off Environment Simulator - Manual Mode')
 
@@ -99,8 +84,11 @@ for node in node_weights.keys():
     node_weights[node] = st.slider(f'{node} Impact', -1.0, 1.0, 0.0)
 
 st.write("### Risk Environment Graph")
+
 try:
-    graph_image = draw_graph(node_weights)
-    st.image(graph_image, use_column_width=True)
+    net = draw_interactive_graph(node_weights)
+    path = '/tmp/network.html'
+    net.save_graph(path)
+    st.components.v1.html(open(path, 'r').read(), height=800)
 except Exception as e:
     st.error(f"An error occurred while generating the graph: {e}")
