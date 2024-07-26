@@ -42,8 +42,8 @@ edge_descriptions = {
 }
 
 def draw_interactive_graph(node_weights):
-    net = Network(notebook=True, height="800px", width="100%", bgcolor="#fafafa", font_color="black", font_size=14, edge_width=2)
-    
+    net = Network(notebook=True, height="800px", width="100%", bgcolor="#fafafa", font_color="black")
+
     # Add nodes with tooltips
     for node, description in node_descriptions.items():
         size = max(20 + 50 * abs(node_weights.get(node, 0)), 20)  # Minimum size of 20
@@ -69,27 +69,4 @@ node_weights = {
     'Economic Growth\n(GDP)': 0,
     'Inflation Rates': 0,
     'Employment Data\n(Unemployment Rate, NFP)': 0,
-    'Consumer Confidence': 0,
-    'US Dollar Index\n(DXY)': 0,
-    'Oil Prices\n(WTI, Brent)': 0,
-    'Equities\n(Stocks)': 0,
-    'High-Yield Bonds': 0,
-    'Commodities': 0,
-    'Cryptocurrencies': 0,
-    'Bitcoin (BTC)': 0,
-    'Ethereum (ETH)': 0,
-    'Large-Cap Altcoins': 0,
-    'Small-Cap Altcoins': 0
-}
-
-# Input sliders for manual mode
-for node in node_weights.keys():
-    node_weights[node] = st.slider(f'{node} Impact', -1.0, 1.0, 0.0)
-
-st.write("### Risk Environment Graph")
-
-try:
-    path = draw_interactive_graph(node_weights)
-    st.components.v1.html(open(path, 'r').read(), height=800)
-except Exception as e:
-    st.error(f"An error occurred while generating the graph: {e}")
+    'Consumer Confid
