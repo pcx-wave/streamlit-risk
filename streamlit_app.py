@@ -7,24 +7,24 @@ from io import BytesIO
 def draw_graph(node_weights):
     G = nx.DiGraph()
     
-    # Define nodes and positions
+    # Define nodes and positions with a clearer hierarchical arrangement
     nodes = {
-        'Central Bank Policies\n(Interest Rates)': (0, 4),
-        'Bond Yields\n(Yield Curve)': (1, 4),
-        'Economic Growth\n(GDP)': (2, 4),
-        'Inflation Rates': (0, 3),
-        'Employment Data\n(Unemployment Rate, NFP)': (1, 3),
-        'Consumer Confidence': (2, 3),
-        'US Dollar Index\n(DXY)': (0, 2),
-        'Oil Prices\n(WTI, Brent)': (1, 2),
-        'Equities\n(Stocks)': (2, 2),
-        'High-Yield Bonds': (0, 1),
-        'Commodities': (1, 1),
-        'Cryptocurrencies': (2, 1),
-        'Bitcoin (BTC)': (2, 0),
-        'Ethereum (ETH)': (1, 0),
-        'Large-Cap Altcoins': (0, 0),
-        'Small-Cap Altcoins': (2, -1)
+        'Central Bank Policies\n(Interest Rates)': (0, 5),
+        'Bond Yields\n(Yield Curve)': (-1, 4),
+        'Economic Growth\n(GDP)': (0, 4),
+        'Inflation Rates': (1, 4),
+        'Employment Data\n(Unemployment Rate, NFP)': (-1, 3),
+        'Consumer Confidence': (0, 3),
+        'US Dollar Index\n(DXY)': (1, 3),
+        'Oil Prices\n(WTI, Brent)': (-1, 2),
+        'Equities\n(Stocks)': (0, 2),
+        'High-Yield Bonds': (1, 2),
+        'Commodities': (-1, 1),
+        'Cryptocurrencies': (0, 1),
+        'Bitcoin (BTC)': (1, 1),
+        'Ethereum (ETH)': (2, 1),
+        'Large-Cap Altcoins': (1, 0),
+        'Small-Cap Altcoins': (2, 0)
     }
     
     G.add_nodes_from(nodes.keys())
@@ -58,7 +58,9 @@ def draw_graph(node_weights):
     
     # Adjust node sizes based on the absolute value of weights
     node_size = [max(500 + 1000 * abs(weight), 500) for weight in node_weights.values()]  # Minimum size of 500
-    edge_width = [0.5 + 1.5 * abs(weight) for weight in node_weights.values() if weight > 0]  # Adjust edge width based on positive weights
+    
+    # Adjust edge widths based on the absolute value of weights
+    edge_width = [0.5 + 1.5 * abs(node_weights.get(u, 0)) for u, v in edges]  # Use node weights to determine edge width
     
     # Draw the graph
     plt.figure(figsize=(12, 8))
