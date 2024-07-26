@@ -85,7 +85,7 @@ def draw_graph(node_weights):
     net.toggle_physics(False)
 
     # Save and load the graph as HTML
-    return net.to_html()
+    return net.generate_html()
 
 st.title('Risk-On/Risk-Off Environment Simulator - Manual Mode')
 
