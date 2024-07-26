@@ -69,4 +69,27 @@ node_weights = {
     'Economic Growth\n(GDP)': 0,
     'Inflation Rates': 0,
     'Employment Data\n(Unemployment Rate, NFP)': 0,
-    'Consumer Confid
+    'Consumer Confidence': 0,
+    'US Dollar Index\n(DXY)': 0,
+    'Oil Prices\n(WTI, Brent)': 0,
+    'Equities\n(Stocks)': 0,
+    'High-Yield Bonds': 0,
+    'Commodities': 0,
+    'Cryptocurrencies': 0,
+    'Bitcoin (BTC)': 0,
+    'Ethereum (ETH)': 0,
+    'Large-Cap Altcoins': 0,
+    'Small-Cap Altcoins': 0
+}
+
+# Input sliders for manual mode
+for node in node_weights.keys():
+    node_weights[node] = st.slider(f'{node} Impact', -1.0, 1.0, 0.0)
+
+st.write("### Risk Environment Graph")
+
+try:
+    path = draw_interactive_graph(node_weights)
+    st.components.v1.html(open(path, 'r').read(), height=800)
+except Exception as e:
+    st.error(f"An error occurred while generating the graph: {e}")
