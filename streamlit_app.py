@@ -9,27 +9,27 @@ def draw_graph(node_weights):
     
     # Define nodes and positions
     nodes = {
-        'Central Bank Policies\n(Interest Rates)': (0, 3),
-        'Bond Yields\n(Yield Curve)': (1, 3),
-        'Economic Growth\n(GDP)': (2, 3),
-        'Inflation Rates': (0, 2),
-        'Employment Data\n(Unemployment Rate, NFP)': (1, 2),
-        'Consumer Confidence': (2, 2),
-        'US Dollar Index\n(DXY)': (0, 1),
-        'Oil Prices\n(WTI, Brent)': (1, 1),
-        'Equities\n(Stocks)': (2, 1),
-        'High-Yield Bonds': (0, 0),
-        'Commodities': (1, 0),
-        'Cryptocurrencies': (2, 0),
-        'Bitcoin (BTC)': (2, -1),
-        'Ethereum (ETH)': (1, -1),
-        'Large-Cap Altcoins': (0, -1),
-        'Small-Cap Altcoins': (2, -2)
+        'Central Bank Policies\n(Interest Rates)': (0, 4),
+        'Bond Yields\n(Yield Curve)': (1, 4),
+        'Economic Growth\n(GDP)': (2, 4),
+        'Inflation Rates': (0, 3),
+        'Employment Data\n(Unemployment Rate, NFP)': (1, 3),
+        'Consumer Confidence': (2, 3),
+        'US Dollar Index\n(DXY)': (0, 2),
+        'Oil Prices\n(WTI, Brent)': (1, 2),
+        'Equities\n(Stocks)': (2, 2),
+        'High-Yield Bonds': (0, 1),
+        'Commodities': (1, 1),
+        'Cryptocurrencies': (2, 1),
+        'Bitcoin (BTC)': (2, 0),
+        'Ethereum (ETH)': (1, 0),
+        'Large-Cap Altcoins': (0, 0),
+        'Small-Cap Altcoins': (2, -1)
     }
     
     G.add_nodes_from(nodes.keys())
     
-    # Define edges
+    # Define edges based on direct influence
     edges = [
         ('Central Bank Policies\n(Interest Rates)', 'Inflation Rates'),
         ('Central Bank Policies\n(Interest Rates)', 'Bond Yields\n(Yield Curve)'),
@@ -56,10 +56,12 @@ def draw_graph(node_weights):
     # Determine node colors
     node_colors = {node: 'red' if node_weights[node] < 0 else 'green' for node in G.nodes()}
     
+    # Adjust node sizes based on the absolute value of weights
+    node_size = [max(500 + 1000 * abs(weight), 500) for weight in node_weights.values()]  # Minimum size of 500
+    edge_width = [0.5 + 1.5 * abs(weight) for weight in node_weights.values() if weight > 0]  # Adjust edge width based on positive weights
+    
     # Draw the graph
     plt.figure(figsize=(12, 8))
-    node_size = [500 + 1000 * weight for weight in node_weights.values()]  # Adjust node size based on weight
-    edge_width = [0.5 + 1.5 * weight for weight in node_weights.values() if weight > 0]  # Adjust edge width based on weight
     nx.draw(G, pos, with_labels=True, node_size=node_size, node_color=[node_colors[node] for node in G.nodes()],
             alpha=0.8, font_size=10, font_color="black", font_weight="bold", linewidths=2, width=edge_width, edge_color="grey")
     
