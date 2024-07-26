@@ -26,19 +26,25 @@ node_descriptions = {
 edge_descriptions = {
     ('Central Bank Policies\n(Interest Rates)', 'Inflation Rates'): 'Rising interest rates reduce inflation by lowering spending and investment.',
     ('Central Bank Policies\n(Interest Rates)', 'Bond Yields\n(Yield Curve)'): 'Higher interest rates lead to higher bond yields.',
+    ('Bond Yields\n(Yield Curve)', 'Equities\n(Stocks)'): 'Higher bond yields make stocks less attractive.',
     ('Bond Yields\n(Yield Curve)', 'High-Yield Bonds'): 'Rising government bond yields increase the returns required from high-yield bonds.',
+    ('Inflation Rates', 'Central Bank Policies\n(Interest Rates)'): 'High inflation leads central banks to raise interest rates.',
     ('Economic Growth\n(GDP)', 'Consumer Confidence'): 'Higher GDP growth boosts consumer confidence.',
     ('Economic Growth\n(GDP)', 'Equities\n(Stocks)'): 'Economic growth leads to higher corporate earnings, boosting stock prices.',
-    ('Inflation Rates', 'High-Yield Bonds'): 'Higher inflation leads to higher yields on high-yield bonds to compensate for inflation risk.',
+    ('Inflation Rates', 'Equities\n(Stocks)'): 'Higher inflation reduces corporate profits, leading to lower stock prices.',
     ('Employment Data\n(Unemployment Rate, NFP)', 'Equities\n(Stocks)'): 'Lower unemployment leads to higher consumer spending, boosting stock prices.',
     ('US Dollar Index\n(DXY)', 'Oil Prices\n(WTI, Brent)'): 'A stronger dollar makes oil more expensive in other currencies, lowering demand.',
     ('Oil Prices\n(WTI, Brent)', 'Commodities'): 'Higher oil prices increase production costs, raising commodity prices.',
+    ('Consumer Confidence', 'Equities\n(Stocks)'): 'Higher consumer confidence boosts spending, raising stock prices.',
+    ('Consumer Confidence', 'Commodities'): 'Higher confidence leads to increased demand for commodities.',
+    ('Consumer Confidence', 'Cryptocurrencies'): 'Higher confidence can lead to more investments in cryptocurrencies.',
+    ('Consumer Confidence', 'High-Yield Bonds'): 'Higher confidence can lead to higher demand for high-yield bonds.',
     ('Commodities', 'High-Yield Bonds'): 'Higher commodity prices can increase revenues for commodity-producing companies, affecting their bond yields.',
-    ('Commodities', 'Cryptocurrencies'): 'Rising commodity prices can drive investors to cryptocurrencies as an inflation hedge.',
     ('Cryptocurrencies', 'Bitcoin (BTC)'): 'Bitcoin is a major component of the cryptocurrency market.',
     ('Cryptocurrencies', 'Ethereum (ETH)'): 'Ethereum is a significant part of the cryptocurrency market.',
     ('Cryptocurrencies', 'Large-Cap Altcoins'): 'Large-cap altcoins are part of the broader cryptocurrency market.',
     ('Cryptocurrencies', 'Small-Cap Altcoins'): 'Small-cap altcoins are part of the broader cryptocurrency market.'
+
 }
 
 # Define node positions
