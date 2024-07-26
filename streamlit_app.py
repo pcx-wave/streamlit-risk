@@ -41,6 +41,26 @@ edge_descriptions = {
     ('Cryptocurrencies', 'Small-Cap Altcoins'): 'Cryptocurrencies include small-cap altcoins.'
 }
 
+# Define node positions
+node_positions = {
+    'Central Bank Policies\n(Interest Rates)': (0, 10),
+    'Bond Yields\n(Yield Curve)': (0, 8),
+    'Economic Growth\n(GDP)': (0, 6),
+    'Inflation Rates': (0, 4),
+    'Employment Data\n(Unemployment Rate, NFP)': (0, 2),
+    'Consumer Confidence': (0, 0),
+    'US Dollar Index\n(DXY)': (0, -2),
+    'Oil Prices\n(WTI, Brent)': (0, -4),
+    'Equities\n(Stocks)': (0, -6),
+    'High-Yield Bonds': (0, -8),
+    'Commodities': (0, -10),
+    'Cryptocurrencies': (0, -12),
+    'Bitcoin (BTC)': (0, -14),
+    'Ethereum (ETH)': (0, -16),
+    'Large-Cap Altcoins': (0, -18),
+    'Small-Cap Altcoins': (0, -20)
+}
+
 def draw_interactive_graph(node_weights):
     net = Network(notebook=True, height="800px", width="100%", bgcolor="#fafafa", font_color="black")
 
@@ -48,7 +68,8 @@ def draw_interactive_graph(node_weights):
     for node, description in node_descriptions.items():
         size = max(20 + 50 * abs(node_weights.get(node, 0)), 20)  # Minimum size of 20
         color = 'green' if node_weights.get(node, 0) >= 0 else 'red'
-        net.add_node(node, label=node, title=description, size=size, color=color)
+        pos = node_positions.get(node, (0, 0))  # Default to (0,0) if not specified
+        net.add_node(node, label=node, title=description, size=size, color=color, x=pos[0], y=pos[1])
     
     # Add edges with tooltips
     for u, v in edge_descriptions.keys():
