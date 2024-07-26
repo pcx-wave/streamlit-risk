@@ -47,18 +47,18 @@ node_positions = {
     'Bond Yields\n(Yield Curve)': (-200, -100),
     'Economic Growth\n(GDP)': (0, -100),
     'Inflation Rates': (200, -100),
-    'Employment Data\n(Unemployment Rate, NFP)': (0, -200),
-    'Consumer Confidence': (200, -200),
-    'US Dollar Index\n(DXY)': (400, -100),
-    'Oil Prices\n(WTI, Brent)': (600, -100),
-    'Equities\n(Stocks)': (200, -300),
-    'High-Yield Bonds': (400, -200),
-    'Commodities': (600, -200),
-    'Cryptocurrencies': (800, -100),
-    'Bitcoin (BTC)': (800, -200),
-    'Ethereum (ETH)': (800, -300),
-    'Large-Cap Altcoins': (1000, -200),
-    'Small-Cap Altcoins': (1000, -300)
+    'Employment Data\n(Unemployment Rate, NFP)': (-200, -200),
+    'Consumer Confidence': (0, -200),
+    'US Dollar Index\n(DXY)': (200, -200),
+    'Oil Prices\n(WTI, Brent)': (-200, -300),
+    'Equities\n(Stocks)': (0, -300),
+    'High-Yield Bonds': (200, -300),
+    'Commodities': (0, -400),
+    'Cryptocurrencies': (200, -400),
+    'Bitcoin (BTC)': (400, -400),
+    'Ethereum (ETH)': (600, -400),
+    'Large-Cap Altcoins': (800, -500),
+    'Small-Cap Altcoins': (1000, -600)
 }
 
 def draw_graph(node_weights):
@@ -73,7 +73,7 @@ def draw_graph(node_weights):
     
     # Add edges with attributes
     for u, v in edge_descriptions.keys():
-        width = max(2 + 4 * abs(node_weights.get(u, 0)), 2)  # Minimum width of 2
+        width = max(5 + 10 * abs(node_weights.get(u, 0)), 2)  # Minimum width of 2
         G.add_edge(u, v, width=width, title=edge_descriptions[(u, v)])
 
     # Create a Pyvis Network
