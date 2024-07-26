@@ -44,21 +44,21 @@ edge_descriptions = {
 # Define node positions
 node_positions = {
     'Central Bank Policies\n(Interest Rates)': (0, 0),
-    'Bond Yields\n(Yield Curve)': (-200, -100),
-    'Economic Growth\n(GDP)': (0, -100),
-    'Inflation Rates': (200, -100),
-    'Employment Data\n(Unemployment Rate, NFP)': (-300, -200),
-    'Consumer Confidence': (0, -200),
-    'US Dollar Index\n(DXY)': (300, -200),
-    'Oil Prices\n(WTI, Brent)': (-200, -300),
-    'Commodities': (200, -300),
-    'Equities\n(Stocks)': (-200, -400),
-    'High-Yield Bonds': (200, -400),
-    'Cryptocurrencies': (0, -500),
-    'Bitcoin (BTC)': (-300, -600),
-    'Ethereum (ETH)': (0, -600),
-    'Large-Cap Altcoins': (300, -700),
-    'Small-Cap Altcoins': (600, -700)
+    'Bond Yields\n(Yield Curve)': (-200, 100),
+    'Economic Growth\n(GDP)': (0, 100),
+    'Inflation Rates': (200, 100),
+    'Employment Data\n(Unemployment Rate, NFP)': (-300, 200),
+    'Consumer Confidence': (0, 200),
+    'US Dollar Index\n(DXY)': (300, 200),
+    'Oil Prices\n(WTI, Brent)': (-200, 300),
+    'Commodities': (200, 300),
+    'Equities\n(Stocks)': (-200, 400),
+    'High-Yield Bonds': (200, 400),
+    'Cryptocurrencies': (0, 500),
+    'Bitcoin (BTC)': (-300, 600),
+    'Ethereum (ETH)': (0, 600),
+    'Large-Cap Altcoins': (300, 700),
+    'Small-Cap Altcoins': (600, 700)
 }
 
 def draw_graph(node_weights):
