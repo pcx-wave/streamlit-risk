@@ -24,41 +24,41 @@ node_descriptions = {
 }
 
 edge_descriptions = {
-    ('Central Bank Policies\n(Interest Rates)', 'Inflation Rates'): 'Interest rates impact inflation rates.',
-    ('Central Bank Policies\n(Interest Rates)', 'Bond Yields\n(Yield Curve)'): 'Central bank policies influence bond yields.',
-    ('Bond Yields\n(Yield Curve)', 'High-Yield Bonds'): 'Bond yields affect high-yield bonds returns.',
-    ('Economic Growth\n(GDP)', 'Consumer Confidence'): 'Economic growth influences consumer confidence.',
-    ('Economic Growth\n(GDP)', 'Equities\n(Stocks)'): 'Economic growth affects stock prices.',
-    ('Inflation Rates', 'High-Yield Bonds'): 'Inflation rates impact high-yield bonds.',
-    ('Employment Data\n(Unemployment Rate, NFP)', 'Equities\n(Stocks)'): 'Employment data influences stock market performance.',
-    ('US Dollar Index\n(DXY)', 'Oil Prices\n(WTI, Brent)'): 'Dollar index impacts oil prices.',
-    ('Oil Prices\n(WTI, Brent)', 'Commodities'): 'Oil prices affect commodity prices.',
-    ('Commodities', 'High-Yield Bonds'): 'Commodities influence high-yield bonds.',
-    ('Commodities', 'Cryptocurrencies'): 'Commodities prices affect cryptocurrencies.',
-    ('Cryptocurrencies', 'Bitcoin (BTC)'): 'Cryptocurrencies include Bitcoin.',
-    ('Cryptocurrencies', 'Ethereum (ETH)'): 'Cryptocurrencies include Ethereum.',
-    ('Cryptocurrencies', 'Large-Cap Altcoins'): 'Cryptocurrencies include large-cap altcoins.',
-    ('Cryptocurrencies', 'Small-Cap Altcoins'): 'Cryptocurrencies include small-cap altcoins.'
+    ('Central Bank Policies\n(Interest Rates)', 'Inflation Rates'): 'Rising interest rates reduce inflation by lowering spending and investment.',
+    ('Central Bank Policies\n(Interest Rates)', 'Bond Yields\n(Yield Curve)'): 'Higher interest rates lead to higher bond yields.',
+    ('Bond Yields\n(Yield Curve)', 'High-Yield Bonds'): 'Rising government bond yields increase the returns required from high-yield bonds.',
+    ('Economic Growth\n(GDP)', 'Consumer Confidence'): 'Higher GDP growth boosts consumer confidence.',
+    ('Economic Growth\n(GDP)', 'Equities\n(Stocks)'): 'Economic growth leads to higher corporate earnings, boosting stock prices.',
+    ('Inflation Rates', 'High-Yield Bonds'): 'Higher inflation leads to higher yields on high-yield bonds to compensate for inflation risk.',
+    ('Employment Data\n(Unemployment Rate, NFP)', 'Equities\n(Stocks)'): 'Lower unemployment leads to higher consumer spending, boosting stock prices.',
+    ('US Dollar Index\n(DXY)', 'Oil Prices\n(WTI, Brent)'): 'A stronger dollar makes oil more expensive in other currencies, lowering demand.',
+    ('Oil Prices\n(WTI, Brent)', 'Commodities'): 'Higher oil prices increase production costs, raising commodity prices.',
+    ('Commodities', 'High-Yield Bonds'): 'Higher commodity prices can increase revenues for commodity-producing companies, affecting their bond yields.',
+    ('Commodities', 'Cryptocurrencies'): 'Rising commodity prices can drive investors to cryptocurrencies as an inflation hedge.',
+    ('Cryptocurrencies', 'Bitcoin (BTC)'): 'Bitcoin is a major component of the cryptocurrency market.',
+    ('Cryptocurrencies', 'Ethereum (ETH)'): 'Ethereum is a significant part of the cryptocurrency market.',
+    ('Cryptocurrencies', 'Large-Cap Altcoins'): 'Large-cap altcoins are part of the broader cryptocurrency market.',
+    ('Cryptocurrencies', 'Small-Cap Altcoins'): 'Small-cap altcoins are part of the broader cryptocurrency market.'
 }
 
 # Define node positions
 node_positions = {
     'Central Bank Policies\n(Interest Rates)': (0, 0),
-    'Bond Yields\n(Yield Curve)': (0, -100),
-    'Economic Growth\n(GDP)': (0, -200),
-    'Inflation Rates': (100, -100),
-    'Employment Data\n(Unemployment Rate, NFP)': (0, -300),
-    'Consumer Confidence': (100, -200),
-    'US Dollar Index\n(DXY)': (200, -100),
-    'Oil Prices\n(WTI, Brent)': (300, -100),
-    'Equities\n(Stocks)': (100, -300),
-    'High-Yield Bonds': (200, -200),
-    'Commodities': (300, -200),
-    'Cryptocurrencies': (400, -100),
-    'Bitcoin (BTC)': (400, -200),
-    'Ethereum (ETH)': (400, -300),
-    'Large-Cap Altcoins': (500, -200),
-    'Small-Cap Altcoins': (500, -300)
+    'Bond Yields\n(Yield Curve)': (-200, -100),
+    'Economic Growth\n(GDP)': (0, -100),
+    'Inflation Rates': (200, -100),
+    'Employment Data\n(Unemployment Rate, NFP)': (0, -200),
+    'Consumer Confidence': (200, -200),
+    'US Dollar Index\n(DXY)': (400, -100),
+    'Oil Prices\n(WTI, Brent)': (600, -100),
+    'Equities\n(Stocks)': (200, -300),
+    'High-Yield Bonds': (400, -200),
+    'Commodities': (600, -200),
+    'Cryptocurrencies': (800, -100),
+    'Bitcoin (BTC)': (800, -200),
+    'Ethereum (ETH)': (800, -300),
+    'Large-Cap Altcoins': (1000, -200),
+    'Small-Cap Altcoins': (1000, -300)
 }
 
 def draw_graph(node_weights):
@@ -77,14 +77,14 @@ def draw_graph(node_weights):
         G.add_edge(u, v, width=width, title=edge_descriptions[(u, v)])
 
     # Create a Pyvis Network
-    net = Network(notebook=True, height='600px', width='100%', bgcolor='#ffffff', font_color='black')
+    net = Network(notebook=True, height='800px', width='100%', bgcolor='#ffffff', font_color='black')
     net.from_nx(G)
 
     # Set the physics layout to False for fixed positions
     net.repulsion(node_distance=420, central_gravity=0.33, spring_length=110, spring_strength=0.10, damping=0.95)
     net.toggle_physics(False)
 
-    # Save and load the graph as HTML
+    # Generate the graph as HTML
     return net.generate_html()
 
 st.title('Risk-On/Risk-Off Environment Simulator - Manual Mode')
