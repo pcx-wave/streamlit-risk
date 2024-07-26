@@ -1,7 +1,7 @@
 import streamlit as st
-from pyvis.network import Network
-import pandas as pd
-from io import BytesIO
+import matplotlib.pyplot as plt
+import networkx as nx
+import numpy as np
 
 # Define node descriptions and edge details
 node_descriptions = {
@@ -41,45 +41,59 @@ edge_descriptions = {
     ('Cryptocurrencies', 'Small-Cap Altcoins'): 'Cryptocurrencies include small-cap altcoins.'
 }
 
-# Define node positions explicitly for a clear hierarchy
-node_positions = {
-    'Central Bank Policies\n(Interest Rates)': (0, 10),
-    'Bond Yields\n(Yield Curve)': (0, 8),
-    'Economic Growth\n(GDP)': (0, 6),
-    'Inflation Rates': (0, 4),
-    'Employment Data\n(Unemployment Rate, NFP)': (0, 2),
-    'Consumer Confidence': (0, 0),
-    'US Dollar Index\n(DXY)': (0, -2),
-    'Oil Prices\n(WTI, Brent)': (0, -4),
-    'Equities\n(Stocks)': (0, -6),
-    'High-Yield Bonds': (0, -8),
-    'Commodities': (0, -10),
-    'Cryptocurrencies': (0, -12),
-    'Bitcoin (BTC)': (0, -14),
-    'Ethereum (ETH)': (0, -16),
-    'Large-Cap Altcoins': (0, -18),
-    'Small-Cap Altcoins': (0, -20)
-}
+def draw_graph(node_weights):
+    G = nx.DiGraph()
 
-def draw_interactive_graph(node_weights):
-    net = Network(notebook=True, height="800px", width="100%", bgcolor="#fafafa", font_color="black")
-
-    # Add nodes with tooltips
+    # Add nodes with attributes
     for node, description in node_descriptions.items():
         size = max(20 + 50 * abs(node_weights.get(node, 0)), 20)  # Minimum size of 20
         color = 'green' if node_weights.get(node, 0) >= 0 else 'red'
-        pos = node_positions.get(node, (0, 0))  # Default to (0,0) if not specified
-        net.add_node(node, label=node, title=description, size=size, color=color, x=pos[0], y=pos[1])
+        G.add_node(node, size=size, color=color, description=description)
     
-    # Add edges with tooltips
+    # Add edges with attributes
     for u, v in edge_descriptions.keys():
         width = max(2 + 4 * abs(node_weights.get(u, 0)), 2)  # Minimum width of 2
-        net.add_edge(u, v, title=edge_descriptions[(u, v)], width=width)
+        G.add_edge(u, v, width=width, description=edge_descriptions[(u, v)])
+
+    # Define node positions explicitly
+    pos = {
+        'Central Bank Policies\n(Interest Rates)': (0, 10),
+        'Bond Yields\n(Yield Curve)': (0, 8),
+        'Economic Growth\n(GDP)': (0, 6),
+        'Inflation Rates': (0, 4),
+        'Employment Data\n(Unemployment Rate, NFP)': (0, 2),
+        'Consumer Confidence': (0, 0),
+        'US Dollar Index\n(DXY)': (0, -2),
+        'Oil Prices\n(WTI, Brent)': (0, -4),
+        'Equities\n(Stocks)': (0, -6),
+        'High-Yield Bonds': (0, -8),
+        'Commodities': (0, -10),
+        'Cryptocurrencies': (0, -12),
+        'Bitcoin (BTC)': (0, -14),
+        'Ethereum (ETH)': (0, -16),
+        'Large-Cap Altcoins': (0, -18),
+        'Small-Cap Altcoins': (0, -20)
+    }
+
+    # Draw the graph
+    plt.figure(figsize=(12, 10))
+    nx.draw(G, pos, with_labels=True, node_size=[G.nodes[node]['size'] for node in G.nodes],
+            node_color=[G.nodes[node]['color'] for node in G.nodes],
+            edge_color='grey', font_size=8, width=[G.edges[edge]['width'] for edge in G.edges])
     
-    # Return the network as an HTML file
-    path = '/tmp/network.html'
-    net.save_graph(path)
-    return path
+    # Draw node labels with descriptions
+    labels = {node: G.nodes[node]['description'] for node in G.nodes}
+    nx.draw_networkx_labels(G, pos, labels=labels, font_size=8)
+    
+    # Draw edge labels with descriptions
+    edge_labels = {(u, v): G.edges[(u, v)]['description'] for u, v in G.edges}
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8)
+
+    # Save the plot to a BytesIO object
+    buf = BytesIO()
+    plt.savefig(buf, format="png")
+    buf.seek(0)
+    return buf
 
 st.title('Risk-On/Risk-Off Environment Simulator - Manual Mode')
 
@@ -110,7 +124,7 @@ for node in node_weights.keys():
 st.write("### Risk Environment Graph")
 
 try:
-    path = draw_interactive_graph(node_weights)
-    st.components.v1.html(open(path, 'r').read(), height=800)
+    buf = draw_graph(node_weights)
+    st.image(buf)
 except Exception as e:
     st.error(f"An error occurred while generating the graph: {e}")
