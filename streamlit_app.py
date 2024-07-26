@@ -79,8 +79,9 @@ def draw_graph(node_weights):
     
     # Add edges with attributes
     for u, v in edge_descriptions.keys():
-        width = max(5 + 10 * abs(node_weights.get(u, 0)), 2)  # Minimum width of 2
-        G.add_edge(u, v, width=width, title=edge_descriptions[(u, v)])
+        width = max(5 + 10 * abs(node_weights.get(u, 0)), 5)  # Minimum width of 5
+        G.add_edge(u, v, width=width, title=edge_descriptions[(u, v)], arrowhead='vee')  # Arrowhead for direction
+
 
     # Create a Pyvis Network
     net = Network(notebook=True, height='800px', width='100%', bgcolor='#ffffff', font_color='black')
